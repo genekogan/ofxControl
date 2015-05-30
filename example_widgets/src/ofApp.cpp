@@ -7,30 +7,30 @@ void ofApp::setup()
     
     // Toggles & buttons
 
-    toggle = new GuiToggle("toggle bgColor", &myToggle);
+    toggle = new ofxControlToggle("toggle bgColor", &myToggle);
     toggle->setPosition(10, 10);
     
-    toggleNotify = new GuiToggle("toggle + notify", this, &ofApp::toggleNotifier);
+    toggleNotify = new ofxControlToggle("toggle + notify", this, &ofApp::toggleNotifier);
     toggleNotify->setPosition(10, 40);
     toggleNotify->setSize(130, 35);
     
     
-    button = new GuiButton("a button", this, &ofApp::buttonNotifier);
+    button = new ofxControlButton("a button", this, &ofApp::buttonNotifier);
     button->setPosition(10, 105);
 
     
     // int + float sliders
     
-    intSlider = new GuiSlider<int>("int slider", &intValue, 5, 10);
+    intSlider = new ofxControlSlider<int>("int slider", &intValue, 5, 10);
     intSlider->setSize(200, 40);
     intSlider->setPosition(300, 25);
     
-    floatSlider = new GuiSlider<float>("float slider", &floatValue, 0.1, 0.5);
+    floatSlider = new ofxControlSlider<float>("float slider", &floatValue, 0.1, 0.5);
     floatSlider->setPosition(300, 70);
     
     // double slider with notifier
     
-    doubleSlider = new GuiSlider<double>("double slider + notify", &doubleValue, 4.0, 9.2, this, &ofApp::sliderNotifier);
+    doubleSlider = new ofxControlSlider<double>("double slider + notify", &doubleValue, 4.0, 9.2, this, &ofApp::sliderNotifier);
     doubleSlider->setPosition(300, 100);
     doubleSlider->setWidth(200);
     doubleSlider->setHeight(40);
@@ -38,18 +38,18 @@ void ofApp::setup()
 
     // Range slider
     
-    rangeFloatSlider = new GuiRangeSlider<float>("range floats", &rangeLow, &rangeHigh, 0.0f, 10.0f);
+    rangeFloatSlider = new ofxControlRangeSlider<float>("range floats", &rangeLow, &rangeHigh, 0.0f, 10.0f);
     rangeFloatSlider->setPosition(640, 30);
     
     
     // Multi Sliders
     
-    vec3Slider = new GuiMultiSlider<ofVec3f>("vec3 slider", &vec3val, ofVec3f(0, 0, 0), ofVec3f(2,5,3), this, &ofApp::vec3SliderNotifier);
+    vec3Slider = new ofxControlMultiSlider<ofVec3f>("vec3 slider", &vec3val, ofVec3f(0, 0, 0), ofVec3f(2,5,3), this, &ofApp::vec3SliderNotifier);
     vec3Slider->setPosition(640, 70);
     vec3Slider->setCollapsible(true);
 
     
-    pad = new Gui2dPad("hello", &mypt, ofPoint(0, 0), ofPoint(5, 3));
+    pad = new ofxControl2dPad("hello", &mypt, ofPoint(0, 0), ofPoint(5, 3));
     pad->setPosition(410, 540);
     pad->setCollapsible(true);
     //pad->setWidth(500);
@@ -141,32 +141,32 @@ void ofApp::draw()
 
 }
 
-void ofApp::toggleNotifier(GuiButtonEventArgs & s)
+void ofApp::toggleNotifier(ofxControlButtonEventArgs & s)
 {
     cout << "toggle notifier ! " << s.button->getName() << " : " << s.value << endl;
 }
 
-void ofApp::buttonNotifier(GuiButtonEventArgs & s)
+void ofApp::buttonNotifier(ofxControlButtonEventArgs & s)
 {
     cout << "button notifier ! " << s.button->getName() << " : " << s.value << endl;
 }
 
-void ofApp::sliderNotifier(GuiSliderEventArgs<double> & s)
+void ofApp::sliderNotifier(ofxControlSliderEventArgs<double> & s)
 {
     cout << "slider "<<s.slider->getName()<< " : " << s.value << endl;
 }
 
-void ofApp::vec3SliderNotifier(GuiMultiSliderEventArgs<ofVec3f> & s)
+void ofApp::vec3SliderNotifier(ofxControlMultiSliderEventArgs<ofVec3f> & s)
 {
     cout << "multislider "<<s.slider->getName()<<" "<<ofToString(s.value)<<endl;
 }
 
-void ofApp::menuNotifier(GuiButtonEventArgs & s)
+void ofApp::menuNotifier(ofxControlButtonEventArgs & s)
 {
     cout << "menu select:: "<<s.button->getName()<< " : " << s.value << endl;
 }
 
-void ofApp::menuNotifierMultiChoice(GuiButtonEventArgs & s)
+void ofApp::menuNotifierMultiChoice(ofxControlButtonEventArgs & s)
 {
     cout << "menu (multiple choice) select:: "<< s.button->getName() << " : " << s.value << endl;
 }

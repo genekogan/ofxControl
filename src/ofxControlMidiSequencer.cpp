@@ -9,15 +9,15 @@ MidiEventArgs::MidiEventArgs(int type, int note, int velocity)
 }
 
 
-ofxControlMidiSequencer::ofxControlMidiSequencerEvent::ofxControlMidiSequencerEvent(int note, int velocity, int start, int end) : GuiElement("midiEvent")
+ofxControlMidiSequencer::ofxControlMidiSequencerEvent::ofxControlMidiSequencerEvent(int note, int velocity, int start, int end) : ofxControlElement("midiEvent")
 {
     this->start = start;
     this->end = end;
     this->note = note;
     this->velocity = velocity;
     
-    GuiElement::setAutoUpdate(false);
-    GuiElement::setAutoDraw(false);
+    ofxControlElement::setAutoUpdate(false);
+    ofxControlElement::setAutoDraw(false);
 }
 
 void ofxControlMidiSequencer::ofxControlMidiSequencerEvent::draw()
@@ -25,26 +25,26 @@ void ofxControlMidiSequencer::ofxControlMidiSequencerEvent::draw()
     ofRect(rectangle);
 }
 
-ofxControlMidiSequencer::ofxControlMidiSequencer(string name) : GuiWidget(name)
+ofxControlMidiSequencer::ofxControlMidiSequencer(string name) : ofxControlWidget(name)
 {
     root = 0;
     key = 1;
     
-    keyboardWidth = ofxControlMidiSeqUENCER_DEFAULT_KEYBOARD_WIDTH;
-    velocityHeight = ofxControlMidiSeqUENCER_DEFAULT_VELOCITY_HEIGHT;
-    toolbarHeight = ofxControlMidiSeqUENCER_DEFAULT_TOOLBAR_HEIGHT;
-    timeScrollHeight = ofxControlMidiSeqUENCER_DEFAULT_TIMEBAR_HEIGHT;
+    bpm = MIDISEQUENCER_DEFAULT_BPM;
+    measures = MIDISEQUENCER_DEFAULT_MEASURES;
+    keyboardWidth = MIDISEQUENCER_DEFAULT_KEYBOARD_WIDTH;
+    velocityHeight = MIDISEQUENCER_DEFAULT_VELOCITY_HEIGHT;
+    toolbarHeight = MIDISEQUENCER_DEFAULT_TOOLBAR_HEIGHT;
+    timeScrollHeight = MIDISEQUENCER_DEFAULT_TIMEBAR_HEIGHT;
 
-    bpm = ofxControlMidiSeqUENCER_DEFAULT_BPM;
-    measures = ofxControlMidiSeqUENCER_DEFAULT_MEASURES;
-    noteMin = ofxControlMidiSeqUENCER_DEFAULT_NOTE_MIN;
-    noteMax = ofxControlMidiSeqUENCER_DEFAULT_NOTE_MAX;
-    start = ofxControlMidiSeqUENCER_DEFAULT_START;
-    end = ofxControlMidiSeqUENCER_DEFAULT_END;
+    noteMin = MIDISEQUENCER_DEFAULT_NOTE_MIN;
+    noteMax = MIDISEQUENCER_DEFAULT_NOTE_MAX;
+    start = MIDISEQUENCER_DEFAULT_START;
+    end = MIDISEQUENCER_DEFAULT_END;
 
-    colorForeground = ofxControlMidiSeqUENCER_DEFAULT_COLOR_FOREGROUND;
-    colorActive = ofxControlMidiSeqUENCER_DEFAULT_COLOR_ACTIVE;
-    colorOutline = ofxControlMidiSeqUENCER_DEFAULT_COLOR_OUTLINE;
+    colorForeground = MIDISEQUENCER_DEFAULT_COLOR_FOREGROUND;
+    colorActive = MIDISEQUENCER_DEFAULT_COLOR_ACTIVE;
+    colorOutline = MIDISEQUENCER_DEFAULT_COLOR_OUTLINE;
 
     setupKeys();
  
@@ -56,25 +56,25 @@ ofxControlMidiSequencer::ofxControlMidiSequencer(string name) : GuiWidget(name)
     mouseOverVelocity = false;
 
     string roots[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-    rootSelect = new GuiMenu("select key", vector<string>(roots, roots + 12), this, &ofxControlMidiSequencer::eventSelectRoot);
+    rootSelect = new ofxControlMenu("select key", vector<string>(roots, roots + 12), this, &ofxControlMidiSequencer::eventSelectRoot);
     rootSelect->setAutoUpdate(false);
     rootSelect->setAutoDraw(false);
     rootSelect->setAutoClose(true);
     rootSelect->setCollapsed(true);
 
     string keys[] = {"major", "minor"};
-    keySelect = new GuiMenu("select key", vector<string>(keys, keys + 2), this, &ofxControlMidiSequencer::eventSelectKey);
+    keySelect = new ofxControlMenu("select key", vector<string>(keys, keys + 2), this, &ofxControlMidiSequencer::eventSelectKey);
     keySelect->setAutoUpdate(false);
     keySelect->setAutoDraw(false);
     keySelect->setAutoClose(true);
     keySelect->setCollapsed(true);
 
-    play = new GuiButton("play", this, &ofxControlMidiSequencer::eventPlay);
-    pause = new GuiButton("pause", this, &ofxControlMidiSequencer::eventPause);
-    stop = new GuiButton("stop", this, &ofxControlMidiSequencer::eventStop);
-    sBpm = new GuiSlider<int>("bpm", &bpm, 10, 1200, this, &ofxControlMidiSequencer::eventSetBpm);
-    sPeriod = new GuiSlider<int>("measures", &measures, 4, 100, this, &ofxControlMidiSequencer::eventSetPeriod);
-    rTime = new GuiRangeSlider<float>("", &start, &end, 0.0f, 1.0f, this, &ofxControlMidiSequencer::eventSetTimeView);
+    play = new ofxControlButton("play", this, &ofxControlMidiSequencer::eventPlay);
+    pause = new ofxControlButton("pause", this, &ofxControlMidiSequencer::eventPause);
+    stop = new ofxControlButton("stop", this, &ofxControlMidiSequencer::eventStop);
+    sBpm = new ofxControlSlider<int>("bpm", &bpm, 10, 1200, this, &ofxControlMidiSequencer::eventSetBpm);
+    sPeriod = new ofxControlSlider<int>("measures", &measures, 4, 100, this, &ofxControlMidiSequencer::eventSetPeriod);
+    rTime = new ofxControlRangeSlider<float>("", &start, &end, 0.0f, 1.0f, this, &ofxControlMidiSequencer::eventSetTimeView);
 
     play->setParent(this);
     pause->setParent(this);
@@ -314,17 +314,17 @@ void ofxControlMidiSequencer::eventBeat()
     }
 }
 
-void ofxControlMidiSequencer::eventSelectRoot(GuiMenuEventArgs &e)
+void ofxControlMidiSequencer::eventSelectRoot(ofxControlMenuEventArgs &e)
 {
     root = e.index;
 }
 
-void ofxControlMidiSequencer::eventSelectKey(GuiMenuEventArgs &e)
+void ofxControlMidiSequencer::eventSelectKey(ofxControlMenuEventArgs &e)
 {
     key = e.toggle->getName() == "major" ? 1 : 0;
 }
 
-void ofxControlMidiSequencer::eventPlay(GuiButtonEventArgs &e)
+void ofxControlMidiSequencer::eventPlay(ofxControlButtonEventArgs &e)
 {
     if (active) {
         beat = 0;
@@ -334,12 +334,12 @@ void ofxControlMidiSequencer::eventPlay(GuiButtonEventArgs &e)
     }
 }
 
-void ofxControlMidiSequencer::eventPause(GuiButtonEventArgs &e)
+void ofxControlMidiSequencer::eventPause(ofxControlButtonEventArgs &e)
 {
     setActive(!active);
 }
 
-void ofxControlMidiSequencer::eventStop(GuiButtonEventArgs &e)
+void ofxControlMidiSequencer::eventStop(ofxControlButtonEventArgs &e)
 {
     setActive(false);
     beat = 0;
@@ -350,17 +350,17 @@ void ofxControlMidiSequencer::eventStop(GuiButtonEventArgs &e)
     }
 }
 
-void ofxControlMidiSequencer::eventSetBpm(GuiSliderEventArgs<int> &e)
+void ofxControlMidiSequencer::eventSetBpm(ofxControlSliderEventArgs<int> &e)
 {
     setBpm(bpm);
 }
 
-void ofxControlMidiSequencer::eventSetPeriod(GuiSliderEventArgs<int> &e)
+void ofxControlMidiSequencer::eventSetPeriod(ofxControlSliderEventArgs<int> &e)
 {
     setPeriod(measures);
 }
 
-void ofxControlMidiSequencer::eventSetTimeView(GuiRangeSliderEventArgs<float> &e)
+void ofxControlMidiSequencer::eventSetTimeView(ofxControlRangeSliderEventArgs<float> &e)
 {
     setTimeDisplayRange(start, end);
 }
@@ -561,7 +561,7 @@ void ofxControlMidiSequencer::drawToolbar()
 
 bool ofxControlMidiSequencer::mouseMoved(int mouseX, int mouseY)
 {
-    GuiWidget::mouseMoved(mouseX, mouseY);
+    ofxControlWidget::mouseMoved(mouseX, mouseY);
     mouseOverGrid = rectGrid.inside(mouseX, mouseY);
     mouseOverKeyboard = rectKeyboard.inside(mouseX, mouseY);
     mouseOverVelocity = rectVelocity.inside(mouseX, mouseY);
@@ -606,7 +606,7 @@ bool ofxControlMidiSequencer::mouseMoved(int mouseX, int mouseY)
 
 bool ofxControlMidiSequencer::mousePressed(int mouseX, int mouseY)
 {
-    if (GuiWidget::mousePressed(mouseX, mouseY)) return true;
+    if (ofxControlWidget::mousePressed(mouseX, mouseY)) return true;
     if (mouseOver)
     {
         if      (rootSelect->mousePressed(mouseX, mouseY)) return true;
@@ -658,7 +658,7 @@ bool ofxControlMidiSequencer::mousePressed(int mouseX, int mouseY)
 
 bool ofxControlMidiSequencer::mouseDragged(int mouseX, int mouseY)
 {
-    GuiWidget::mouseDragged(mouseX, mouseY);
+    ofxControlWidget::mouseDragged(mouseX, mouseY);
     if (mouseDragging)
     {
         if      (rootSelect->mouseDragged(mouseX, mouseY)) return true;
@@ -739,7 +739,7 @@ bool ofxControlMidiSequencer::mouseDragged(int mouseX, int mouseY)
 
 bool ofxControlMidiSequencer::mouseReleased(int mouseX, int mouseY)
 {
-    if (GuiWidget::mouseReleased(mouseX, mouseY)) return true;
+    if (ofxControlWidget::mouseReleased(mouseX, mouseY)) return true;
     if (mouseOver)
     {
         if      (rootSelect->mouseReleased(mouseX, mouseY)) return true;

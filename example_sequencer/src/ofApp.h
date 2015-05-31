@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Control.h"
+#include "ofxControl.h"
 
 
 
@@ -15,10 +15,10 @@ public:
     void update();
     void draw();
     
-    void menuSelect(GuiElementEventArgs & e);
-    void multiChoiceMenuSelect(GuiElementEventArgs & e);
+    void menuSelect(ofxControlMenuEventArgs & e);
+    void multiChoiceMenuSelect(ofxControlMenuEventArgs & e);
 
-    GuiPanel panel;
+    ofxControlPanel panel;
     
     bool filled;
     float radius;

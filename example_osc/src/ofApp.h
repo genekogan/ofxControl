@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Control.h"
+#include "ofxControl.h"
 
 
 class ofApp : public ofBaseApp
@@ -14,14 +14,14 @@ public:
     void draw();
     
     
-    void buttonEvent(GuiButtonEventArgs & e);
-    void menuSelect(GuiMenuEventArgs & e);
-    void sliderEvent(GuiMultiSliderEventArgs<ofVec2f> & e);
-    void colorEvent(GuiColorEventArgs & e);
-    void panelToggleEvent(GuiButtonEventArgs & e);
-    void multiChoiceMenuSelect(GuiMenuEventArgs & e);
+    void buttonEvent(ofxControlButtonEventArgs & e);
+    void menuSelect(ofxControlMenuEventArgs & e);
+    void sliderEvent(ofxControlMultiSliderEventArgs<ofVec2f> & e);
+    void colorEvent(ofxControlColorEventArgs & e);
+    void panelToggleEvent(ofxControlButtonEventArgs & e);
+    void multiChoiceMenuSelect(ofxControlMenuEventArgs & e);
     
-    void textBoxEvent(GuiTextBoxEventArgs & e) {
+    void textBoxEvent(ofxControlTextBoxEventArgs & e) {
         cout << "text box: " << e.textBox->getName() << " : " << e.value <<endl;
     }
     
@@ -44,8 +44,8 @@ public:
     }
     
     
-    GuiPanel *panel;
-    GuiWidget widget;
+    ofxControlPanel *panel;
+    ofxControlWidget widget;
     
     bool button, toggle;
     float floatSlider;
@@ -59,7 +59,7 @@ public:
     ofVec2f vec2slider;
     
     
-    OscManager oscManager;
+    ofxControlOscManager oscManager;
     
     
 };

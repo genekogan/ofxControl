@@ -4,7 +4,7 @@
 void ofApp::setup(){
     
     // a widget is a collection of gui elements
-    panel = new GuiPanel();
+    panel = new ofxControlPanel();
     panel->setName("myPanel");
     
     widget.setName("a widget");
@@ -31,15 +31,15 @@ void ofApp::setup(){
     widget.addColor("color", &color);
     
     // menu (single choice by default). toggle autoClose after a selection (default false)
-    GuiMenu *menu = widget.addMenu("menu", this, &ofApp::menuSelect);
+    ofxControlMenu *menu = widget.addMenu("menu", this, &ofApp::menuSelect);
     menu->setAutoClose(true);
     menu->addToggle("new york");
     menu->addToggle("los angeles");
     menu->addToggle("chicago");
     
     // 2d pad
-    //    Gui2dPad *pad = widget.add2dPad("pad", &padValue, ofPoint(0, 0), ofPoint(20, 12));
-    //    pad->setDrawConnectedPoints(true);
+    // Gui2dPad *pad = widget.add2dPad("pad", &padValue, ofPoint(0, 0), ofPoint(20, 12));
+    // pad->setDrawConnectedPoints(true);
     
     // a panel is a super-widget with some extra functionality, including
     // ability to embed widgets, a sequencer, presets, and osc functionality
@@ -56,12 +56,12 @@ void ofApp::setup(){
     
     
     //GuiWidget *innerWidget = panel->addWidget("widget inside panel");
-    GuiWidget *innerWidget = new GuiWidget("widget inside panel");
+    ofxControlWidget *innerWidget = new ofxControlWidget("widget inside panel");
     innerWidget->addButton("button", &button);
     innerWidget->addToggle("another toggle", this, &ofApp::panelToggleEvent);
     
     // menus can allow multiple choice
-    GuiMenu *menu2 = innerWidget->addMenu("multi choice menu", this, &ofApp::multiChoiceMenuSelect, true);
+    ofxControlMenu *menu2 = innerWidget->addMenu("multi choice menu", this, &ofApp::multiChoiceMenuSelect, true);
     menu2->setMultipleChoice(true);
     menu2->addToggle("kamusta mundo");
     menu2->addToggle("xin chao the gioi");
@@ -69,7 +69,7 @@ void ofApp::setup(){
     menu2->addToggle("suesday piphoplok");
     menu2->addToggle("suwati lok");
     
-    GuiMenu *menu3 = innerWidget->addMenu("menu", this, &ofApp::menuSelect);
+    ofxControlMenu *menu3 = innerWidget->addMenu("menu", this, &ofApp::menuSelect);
     menu3->setAutoClose(false);
     menu3->addToggle("new york");
     menu3->addToggle("los angeles");
@@ -83,7 +83,7 @@ void ofApp::setup(){
     
     panel->addWidget(innerWidget);
     
-    Gui2dPad *pad = panel->add2dPad("pad", &padValue, ofPoint(0, 0), ofPoint(20, 12));
+    ofxControl2dPad *pad = panel->add2dPad("pad", &padValue, ofPoint(0, 0), ofPoint(20, 12));
     pad->setDrawConnectedPoints(true);
     
     
@@ -136,38 +136,38 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::buttonEvent(GuiButtonEventArgs & e)
+void ofApp::buttonEvent(ofxControlButtonEventArgs & e)
 {
     ofLog(OF_LOG_NOTICE, "button event: " + e.button->getName() + " = " + ofToString(e.value));
 }
 
 //--------------------------------------------------------------
-void ofApp::menuSelect(GuiMenuEventArgs & e)
+void ofApp::menuSelect(ofxControlMenuEventArgs & e)
 {
     //    ofLog(OF_LOG_NOTICE, "menu selection event: " + e.slider + " = " + ofToString(e.value));
 }
 
 //--------------------------------------------------------------
-void ofApp::sliderEvent(GuiMultiSliderEventArgs<ofVec2f> & e)
+void ofApp::sliderEvent(ofxControlMultiSliderEventArgs<ofVec2f> & e)
 {
     ofLog(OF_LOG_NOTICE, "slider event: " + e.slider->getName() + " = " + ofToString(e.value));
 }
 
 //--------------------------------------------------------------
-void ofApp::colorEvent(GuiColorEventArgs & e)
+void ofApp::colorEvent(ofxControlColorEventArgs & e)
 {
     ofLog(OF_LOG_NOTICE, "color event: " + e.slider->getName() + " = " + ofToString(e.color));
 }
 
 //--------------------------------------------------------------
-void ofApp::panelToggleEvent(GuiButtonEventArgs & e)
+void ofApp::panelToggleEvent(ofxControlButtonEventArgs & e)
 {
     ofLog(OF_LOG_NOTICE, "toggle event: " + e.button->getName() + " = " + ofToString(e.value));
 }
 
 //--------------------------------------------------------------
-void ofApp::multiChoiceMenuSelect(GuiMenuEventArgs & e)
+void ofApp::multiChoiceMenuSelect(ofxControlMenuEventArgs & e)
 {
-    //    ofLog(OF_LOG_NOTICE, "panel menu event: " + e. + " = " + ofToString(e.value));
+    ofLog(OF_LOG_NOTICE, "panel menu event: " + e.toggle->getName() + " = " + ofToString(e.value));
 }
 

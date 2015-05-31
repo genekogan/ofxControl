@@ -42,41 +42,14 @@
 
 
 /*
- 
 TO-DO
 =====
-x saving sequencer sets
-examples
- - widget
- - panel
- - sequencer
 object management
- - dynamically adding/removing widgets/elements
- - shared_ptr (http://www.umich.edu/~eecs381/handouts/C++11_smart_ptrs.pdf)
+ - debug dynamically adding/removing widgets/elements
+ - switch to shared_ptr
 specific GuiElementEventArgs *L, M
-subclass accessors
----------
-examples
- - customized menu
 style customization (color, size, font)
 sortable menu widget
 keyboard editing
 slider warp
-non-linked sequencer
-
-
-OSC MANAGER
-===========
- - osc in, osc out
- - generate touch osc layouts
- - osc summary interface
- 
- 
-PRESETS
-=======
- - parameters load/save xml
- - save/load interface
- 
- 
- 
 */

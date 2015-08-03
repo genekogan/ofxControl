@@ -3,8 +3,6 @@
 
 void ofApp::setup()
 {
-    ofSetFrameRate(5);
-    
     // Toggles & buttons
 
     toggle = new ofxControlToggle("toggle bgColor", &myToggle);

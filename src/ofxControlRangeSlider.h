@@ -39,6 +39,9 @@ public:
     bool mouseDragged(int mouseX, int mouseY);
     bool keyPressed(int key);
     
+    virtual void setMin(float min);
+    virtual void setMax(float max);
+
     void setValue(float sliderValue);
     virtual void setValueLow(float sliderLow, bool toSendNotification=true);
     virtual void setValueHigh(float sliderHigh, bool toSendNotification=true);
@@ -95,6 +98,9 @@ public:
     
     ~ofxControlRangeSlider();
     
+    void setMin(float min);
+    void setMax(float max);
+    
     void setValueLow(float sliderLow, bool toSendNotification=true);
     void setValueHigh(float sliderHigh, bool toSendNotification=true);
     
@@ -103,7 +109,10 @@ public:
     
     T getParameterLowValue() {return pLow->get();}
     T getParameterHighValue() {return pHigh->get();}
-    
+
+    T getMin() {return pLow->getMin();}
+    T getMax() {return pHigh->getMax();}
+
     void getParameters(vector<ofxControlParameterBase*> & parameters);
 
     void update();
@@ -189,14 +198,34 @@ ofxControlRangeSlider<T>::~ofxControlRangeSlider<T>()
 }
 
 template<typename T>
+void ofxControlRangeSlider<T>::setMin(float min)
+{
+    pLow->setMin(min);
+    pHigh->setMin(min);
+    updateValueString();
+    adjustSliderValueLow();
+    adjustSliderValueHigh();
+}
+
+template<typename T>
+void ofxControlRangeSlider<T>::setMax(float max)
+{
+    pLow->setMax(max);
+    pHigh->setMax(max);
+    updateValueString();
+    adjustSliderValueLow();
+    adjustSliderValueHigh();
+}
+
+template<typename T>
 void ofxControlRangeSlider<T>::setValueLow(float sliderLow, bool toSendNotification)
 {
     this->sliderLow = sliderLow;
     pLow->set(sliderLow * pLow->getMax() + (1.0 - sliderLow) * pLow->getMin());
     updateValueString();
     adjustSliderValueLow();
-    ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
     if (toSendNotification) {
+        ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
         ofNotifyEvent(rangeSliderEvent, args, this);
     }
 }
@@ -208,8 +237,8 @@ void ofxControlRangeSlider<T>::setValueHigh(float sliderHigh, bool toSendNotific
     pHigh->set(sliderHigh * pHigh->getMax() + (1.0 - sliderHigh) * pHigh->getMin());
     updateValueString();
     adjustSliderValueHigh();
-    ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
     if (toSendNotification) {
+        ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
         ofNotifyEvent(rangeSliderEvent, args, this);
     }
 }
@@ -221,8 +250,8 @@ void ofxControlRangeSlider<T>::setParameterLowValue(T low, bool toSendNotificati
     sliderLow = (float) ofClamp((pLow->get() - pLow->getMin()) / (pLow->getMax() - pLow->getMin()), 0.0, 1.0);
     updateValueString();
     adjustSliderValueLow();
-    ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
     if (toSendNotification) {
+        ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
         ofNotifyEvent(rangeSliderEvent, args, this);
     }
 }
@@ -234,8 +263,8 @@ void ofxControlRangeSlider<T>::setParameterHighValue(T high, bool toSendNotifica
     sliderHigh = (float) ofClamp((pHigh->get() - pHigh->getMin()) / (pHigh->getMax() - pHigh->getMin()), 0.0, 1.0);
     updateValueString();
     adjustSliderValueHigh();
-    ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
     if (toSendNotification) {
+        ofxControlRangeSliderEventArgs<T> args(this, pLow->get(), pHigh->get());
         ofNotifyEvent(rangeSliderEvent, args, this);
     }
 }

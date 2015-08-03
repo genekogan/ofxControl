@@ -73,7 +73,7 @@ ofxControlToggle * ofxControlMenu::addToggle(string name)
     return addToggle(new ofxControlParameter<bool>(name, new bool(false)));
 }
 
-void ofxControlMenu::setToggle(string toggleName, bool value)
+void ofxControlMenu::setToggle(string toggleName, bool value, bool toSendNotification)
 {
     if (!multipleChoice)
     {
@@ -86,7 +86,7 @@ void ofxControlMenu::setToggle(string toggleName, bool value)
         setCollapsed(true);
         setHeader(toggleName);
     }
-    if (menuElements.count(toggleName))
+    if (toSendNotification && menuElements.count(toggleName))
     {
         ofxControlMenuEventArgs evt(menuElements[toggleName]->toggle, menuElements[toggleName]->index, value);
         ofNotifyEvent(menuEvent, evt, this);
@@ -102,6 +102,27 @@ bool ofxControlMenu::getToggle(string toggleName)
     {
         ofLog(OF_LOG_ERROR, "Error: no toggle named "+toggleName);
         return false;
+    }
+}
+
+void ofxControlMenu::setToggle(int toggleIndex, bool value, bool toSendNotification)
+{
+    map<string, MenuElement*>::iterator it = menuElements.begin();
+    for (; it != menuElements.end(); ++it) {
+        if (it->second->index == toggleIndex) {
+            setToggle(it->second->toggle->getName(), value, toSendNotification);
+            return;
+        }
+    }
+}
+
+bool ofxControlMenu::getToggle(int toggleIndex)
+{
+    map<string, MenuElement*>::iterator it = menuElements.begin();
+    for (; it != menuElements.end(); ++it) {
+        if (it->second->index == toggleIndex) {
+            return it->second->toggle->getValue();
+        }
     }
 }
 

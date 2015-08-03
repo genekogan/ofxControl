@@ -66,9 +66,12 @@ public:
     void removeToggle(string toggleName);
     void clearToggles();
     
-    void setToggle(string toggleName, bool value);
+    void setToggle(string toggleName, bool value, bool toSendNotification=true);
     bool getToggle(string toggleName);
-    
+
+    void setToggle(int toggleIndex, bool value, bool toSendNotification=true);
+    bool getToggle(int toggleIndex);
+
     void setAutoClose(bool autoClose);
     void setMultipleChoice(bool multipleChoice) {this->multipleChoice = multipleChoice;}
     

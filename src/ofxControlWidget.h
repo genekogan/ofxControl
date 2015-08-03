@@ -293,7 +293,7 @@ ofxControlRangeSlider<T> * ofxControlWidget::addRangeSlider(string name, T *valu
 template<typename T, typename L, typename M>
 ofxControlRangeSlider<T> * ofxControlWidget::addRangeSlider(string name, T min, T max, L *listener, M method)
 {
-    ofxControlRangeSlider<T> *slider = addRangeSlider(name, min, max);
+    ofxControlRangeSlider<T> *slider = addRangeSlider(name, new T(min), new T(max), min, max);
     ofAddListener(slider->rangeSliderEvent, listener, method);
     return slider;
 }

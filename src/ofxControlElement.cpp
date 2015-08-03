@@ -58,8 +58,7 @@ void ofxControlElement::setMouseOver(bool mouseOver)
 
 void ofxControlElement::setupGuiPositions()
 {
-    if (getCollapsed())
-    {
+    if (getCollapsed()){
         rectangle.set(0, 0, 0, 0);
     }
     else

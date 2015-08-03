@@ -56,6 +56,16 @@ void ofxControlRangeSliderBase::setValueHigh(float sliderHigh, bool toSendNotifi
     this->sliderHigh = sliderHigh;
 }
 
+void ofxControlRangeSliderBase::setMin(float min)
+{
+    
+}
+
+void ofxControlRangeSliderBase::setMax(float max)
+{
+    
+}
+
 void ofxControlRangeSliderBase::lerpTo(float nextLow, float nextHigh, int numFrames)
 {
     if (numFrames > 1)

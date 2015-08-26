@@ -11,12 +11,9 @@ public:
     
     virtual ~ofxControlParameterBase()
     {
-        //
-        //
-        //
-        //
-        //cout << "DELETE PARAM " << this << " " << getName() << endl;
     }
+    
+    virtual string getType() {return "type";}
     
     // name
     string getName() {return name; }
@@ -72,6 +69,8 @@ public:
         value = val;
     }
     
+    string getType();
+    
     ofxControlParameter(string name, T *val, T min, T max) : minValue(min), maxValue(max)
     {
         this->name = name;
@@ -121,6 +120,15 @@ protected:
     T previous;
     T minValue, maxValue;
 };
+
+template<typename T> string ofxControlParameter<T>::getType() { return "type";}
+template<> inline string ofxControlParameter<bool>::getType() { return "bool";}
+template<> inline string ofxControlParameter<int>::getType() { return "int";}
+template<> inline string ofxControlParameter<float>::getType() { return "float";}
+template<> inline string ofxControlParameter<ofVec2f>::getType() { return "ofVec2f";}
+template<> inline string ofxControlParameter<ofVec3f>::getType() { return "ofVec3f";}
+template<> inline string ofxControlParameter<ofVec4f>::getType() { return "ofVec4f";}
+template<> inline string ofxControlParameter<ofFloatColor>::getType() { return "ofFloatColor";}
 
 /*
 // send osc templates

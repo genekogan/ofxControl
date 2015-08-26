@@ -4,10 +4,12 @@
 ofxControlSliderBase::ofxControlSliderBase(string name) : ofxControlElement(name)
 {
     sliderValue = 0.5;
+    warp = 1.0;
     lerpFrame = 0;
     lerpNumFrames = 0;
     changed = false;
     toUpdateValueString = false;
+    exp = false;
 }
 
 ofxControlSliderBase::~ofxControlSliderBase()

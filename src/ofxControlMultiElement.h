@@ -9,7 +9,6 @@
 class ofxControlMultiElement : public ofxControlElement
 {
 public:
-    
     ofxControlMultiElement(string name);
     virtual ~ofxControlMultiElement();
     

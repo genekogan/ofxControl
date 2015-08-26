@@ -39,6 +39,11 @@ public:
     virtual void setMin(float min) { }
     virtual void setMax(float max) { }
     
+    void setWarp(float warp) {this->warp = warp;}
+    float getWarp() {return warp;}
+    
+    virtual void setExponential(bool exp) {this->exp = exp;}
+    
     virtual void update();
     virtual void draw();
     
@@ -68,6 +73,9 @@ protected:
     virtual string getParameterValueString() { }
     
     float sliderValue;
+    float warp;
+    bool exp;
+    int numExpSteps;
     bool changed;
     string valueString, valueStringNext;
     float lerpPrevValue, lerpNextValue;;
@@ -107,6 +115,14 @@ public:
     void setMin(float min);
     void setMax(float max);
 
+    void setExponential(bool exp)
+    {
+        ofxControlSliderBase::setExponential(exp);
+        if (exp) {
+            numExpSteps = ceil(log((float) parameter->getMax() / (float) parameter->getMin()) / log(2));
+        }
+    }
+    
     void update();
     
     ofEvent<ofxControlSliderEventArgs<T> > sliderEvent;
@@ -189,8 +205,27 @@ ofxControlSlider<T>::~ofxControlSlider<T>()
 template<typename T>
 void ofxControlSlider<T>::setValue(float sliderValue)
 {
-    ofxControlSliderBase::setValue(sliderValue);
-    parameter->set(sliderValue * parameter->getMax() + (1.0 - sliderValue) * parameter->getMin());
+    if (exp) {
+        ofxControlSliderBase::setValue(sliderValue - fmodf(sliderValue, 1.0 / numExpSteps));
+    }
+    else {
+        ofxControlSliderBase::setValue(sliderValue);
+    }
+
+    //parameter->set(sliderValue * parameter->getMax() + (1.0 - sliderValue) * parameter->getMin());
+    
+    if (exp) {
+        sliderValue = sliderValue - fmodf(sliderValue, 1.0 / numExpSteps);
+        parameter->set(parameter->getMin() * pow(2.0f, sliderValue * numExpSteps));
+    }
+    else if (warp == 1.0) {
+        parameter->set(sliderValue * parameter->getMax() + (1.0 - sliderValue) * parameter->getMin());
+    }
+    else {
+        float sliderValueWarped = pow(sliderValue, warp);
+        parameter->set(sliderValueWarped * parameter->getMax() + (1.0 - sliderValueWarped) * parameter->getMin());
+    }
+
     updateValueString();
     adjustSliderValue();
     ofxControlSliderEventArgs<T> args(this, parameter->get());
@@ -201,7 +236,17 @@ template<typename T>
 void ofxControlSlider<T>::setParameterValue(T value)
 {
     parameter->set(value);
-    sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    
+    //sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+//    sliderValue = pow((float) (ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0)), 1.0f / warp);
+    if (exp) {
+        sliderValue = log(parameter->get() / parameter->getMin()) / (numExpSteps * log(2));
+    }
+    else {
+        sliderValue = pow((float) (ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0)), 1.0f / warp);
+    }
+    
+    
     updateValueString();
     adjustSliderValue();    // this can just be an inline int for setValue<int> instead
     ofxControlSliderEventArgs<T> args(this, parameter->get());
@@ -305,7 +350,14 @@ void ofxControlSlider<T>::update()
     ofxControlSliderBase::update();
     if (previous != parameter->get())
     {
-        ofxControlSliderBase::setValue(ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0));
+        //ofxControlSliderBase::setValue(ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0));
+        if (exp) {
+            ofxControlSliderBase::setValue(log(parameter->get() / parameter->getMin()) / (numExpSteps * log(2)));
+        }
+        else {
+            ofxControlSliderBase::setValue(pow((float) (ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0)), 1.0f / warp));
+        }
+        
         updateValueString();
         adjustSliderValue();
         previous = parameter->get();
@@ -316,7 +368,16 @@ template<typename T>
 void ofxControlSlider<T>::setMin(float min)
 {
     parameter->setMin(min);
-    sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    
+    
+    //sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    if (exp) {
+        sliderValue = log(parameter->get() / parameter->getMin()) / (numExpSteps * log(2));
+    }
+    else {
+        sliderValue = pow((float) (ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0)), 1.0f / warp);
+    }
+    
     updateValueString();
     adjustSliderValue();
 }
@@ -325,7 +386,16 @@ template<typename T>
 void ofxControlSlider<T>::setMax(float max)
 {
     parameter->setMax(max);
-    sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    
+    
+    //sliderValue = ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    if (exp) {
+        sliderValue = log(parameter->get() / parameter->getMin()) / (numExpSteps * log(2));
+    }
+    else {
+        sliderValue = pow((float) (ofClamp((parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0)), 1.0f / warp);
+    }
+    
     updateValueString();
     adjustSliderValue();
 }
@@ -334,5 +404,12 @@ template<typename T> inline void ofxControlSlider<T>::adjustSliderValue() { }
 
 template<> inline void ofxControlSlider<int>::adjustSliderValue()
 {
-    sliderValue = ofClamp((float) (parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    //sliderValue = ofClamp((float) (parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0);
+    
+    if (exp) {
+        sliderValue = log(parameter->get() / parameter->getMin()) / (numExpSteps * log(2));
+    }
+    else {
+        sliderValue = pow(ofClamp((float) (parameter->get() - parameter->getMin()) / (parameter->getMax() - parameter->getMin()), 0.0, 1.0), 1.0f / warp);
+    }
 }

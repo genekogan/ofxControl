@@ -200,17 +200,7 @@ void ofxControlMultiElement::draw()
             ofRect(headerRectangle);
         }
         ofSetColor(colorText);
-        ofDrawBitmapString(name,    // header??
-                           //
-                           //
-                           //
-                           //
-                           //
-                           //
-                           //
-                           //
-                           
-                           
+        ofDrawBitmapString(name,
                            rectangle.x + 4,
                            rectangle.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
         ofDrawBitmapString(collapsed ? "+" : "-",

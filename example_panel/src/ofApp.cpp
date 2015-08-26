@@ -9,6 +9,11 @@ void ofApp::setup(){
     widget.setPosition(810, 10);
 
     // can add buttons and toggles with or without event notifiers
+    
+    ofxControlSlider<float> *s = widget.addSlider("warpedSlider", new float(0.86), 0.86f, 3522.56f);
+    s->setExponential(true);
+    
+    
     widget.addButton("button", &button);
     widget.addButton("event", this, &ofApp::buttonEvent);
     widget.addToggle("toggle", &toggle);

@@ -40,6 +40,8 @@
 #include "ofxControlOscManagerPanel.h"
 #include "ofxControlMidiSequencer.h"
 
+#include "ofxControlWidgetSelector.h"
+
 
 /*
 TO-DO

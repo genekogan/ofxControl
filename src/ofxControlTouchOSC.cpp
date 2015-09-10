@@ -184,9 +184,9 @@ void ofxControlTouchOsc::save(string name)
     file.close();
     string cmd;
     cmd += "cd "+ofToString(ofToDataPath("")) + "; ";
-    cmd += "zip -r "+name+".ofxControlTouchosc index.xml; ";
+    cmd += "zip -r "+name+".touchosc index.xml; ";
     cmd += "rm index.xml; ";
-    cmd += "open "+name+".ofxControlTouchosc; ";
+    cmd += "open "+name+".touchosc; ";
     ofSystem(cmd);
 }
 

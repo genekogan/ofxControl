@@ -75,8 +75,9 @@ void ofxControlSliderBase::draw()
     if (toUpdateValueString)
     {
         valueString = valueStringNext;
-        valueStringWidth = ofBitmapStringGetBoundingBox(valueString, 0, 0).width;
-        stringHeight = ofBitmapStringGetBoundingBox(name, 0, 0).height;
+        ofBitmapFont b;
+        valueStringWidth = b.getBoundingBox(valueString, 0, 0).width;
+        stringHeight = b.getBoundingBox(name, 0, 0).height;
         toUpdateValueString = false;
     }
     

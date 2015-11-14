@@ -156,7 +156,8 @@ void ofxControl2dPad::setupPad(ofPoint min, ofPoint max)
     setCollapsible(false);
     setHeight(width);
     setDrawConnectedPoints(false);
-    stringHeight = ofBitmapStringGetBoundingBox(name, 0, 0).height;
+    ofBitmapFont b;
+    stringHeight = b.getBoundingBox(name, 0, 0).height;
 }
 
 void ofxControl2dPad::updateParameterOscAddress()
@@ -254,8 +255,9 @@ void ofxControl2dPad::draw()
     if (toUpdateValueString)
     {
         valueString = valueStringNext;
-        valueStringWidth = ofBitmapStringGetBoundingBox(valueString, 0, 0).width;
-        stringHeight = ofBitmapStringGetBoundingBox(name, 0, 0).height;
+        ofBitmapFont b;
+        valueStringWidth = b.getBoundingBox(valueString, 0, 0).width;
+        stringHeight = b.getBoundingBox(name, 0, 0).height;
         toUpdateValueString = false;
     }
     

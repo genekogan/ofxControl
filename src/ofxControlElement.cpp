@@ -101,10 +101,22 @@ void ofxControlElement::setFromXml(ofXml &xml)
 void ofxControlElement::setupDisplayString()
 {
     display = name;
+    
+    ofBitmapFont b;
+    int displayWidth = b.getBoundingBox(display, 0, 0).width;
+    while (displayWidth > getWidth())
+    {
+        display = display.substr(0, display.length()-1);
+        displayWidth = b.getBoundingBox(display, 0, 0).width;
+    }
+    
+    
+    /*
     int displayWidth = ofBitmapStringGetBoundingBox(display, 0, 0).width;
     while (displayWidth > getWidth())
     {
         display = display.substr(0, display.length()-1);
         displayWidth = ofBitmapStringGetBoundingBox(display, 0, 0).width;
     }
+     */
 }

@@ -126,8 +126,12 @@ void ofxControlButtonBase::draw()
 void ofxControlButtonBase::setupGuiPositions()
 {
     ofxControlElement::setupGuiPositions();
-    stringWidth = ofBitmapStringGetBoundingBox(display, 0, 0).width;
-    stringHeight = ofBitmapStringGetBoundingBox(display, 0, 0).height;
+//    stringWidth = ofBitmapStringGetBoundingBox(display, 0, 0).width;
+//    stringHeight = ofBitmapStringGetBoundingBox(display, 0, 0).height;
+    ofBitmapFont b;
+    ofRectangle bb = b.getBoundingBox(display, 0, 0);
+    stringWidth = bb.width;
+    stringHeight = bb.height;
 }
 
 void ofxControlButtonBase::getXml(ofXml &xml)

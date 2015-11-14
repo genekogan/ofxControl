@@ -26,7 +26,8 @@ ofxControlTextBox::~ofxControlTextBox()
 void ofxControlTextBox::setupTextBox()
 {
     setValue(parameter->get());
-    stringHeight = ofBitmapStringGetBoundingBox(name, 0, 0).height;
+    ofBitmapFont b;
+    stringHeight = b.getBoundingBox(name, 0, 0).height;
     setLeftJustified(true);
 }
 
@@ -39,7 +40,8 @@ void ofxControlTextBox::setValue(string value, bool sendChangeNotification)
 {
     string previous = parameter->get();
     parameter->set(value);
-    stringWidth = ofBitmapStringGetBoundingBox(parameter->get(), 0, 0).width;
+    ofBitmapFont b;
+    stringWidth = b.getBoundingBox(parameter->get(), 0, 0).width;
     if (sendChangeNotification && (value != previous))
     {
         ofxControlTextBoxEventArgs args(this, parameter->get());

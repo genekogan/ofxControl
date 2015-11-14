@@ -88,7 +88,8 @@ void ofxControlMultiElement::getParameters(vector<ofxControlParameterBase*> & pa
 void ofxControlMultiElement::setHeader(string header)
 {
     this->header = header;
-    headerStringHeight = ofBitmapStringGetBoundingBox(header, 0, 0).height;
+    ofBitmapFont b;
+    headerStringHeight = b.getBoundingBox(header, 0, 0).height;
 }
 
 void ofxControlMultiElement::updateParameterOscAddress()

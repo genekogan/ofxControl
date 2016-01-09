@@ -265,7 +265,7 @@ void ofxControl2dPad::draw()
     
     ofPushStyle();
 
-    ofSetColor(colorBackground);
+    ofSetColor(colorBackground, 20);
     ofFill();
     ofSetLineWidth(1);
     ofRect(padRectangle);

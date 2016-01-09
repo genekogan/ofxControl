@@ -380,5 +380,5 @@ template<typename L, typename M>
 ofxControlMenu * ofxControlWidget::addMenu(string name, L *listener, M method, bool multipleChoice, bool autoClose)
 {
     vector<string> choices;
-    return addMenu(name, choices, listener, method);
+    return addMenu(name, choices, listener, method, multipleChoice, autoClose);
 }

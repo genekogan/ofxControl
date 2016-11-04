@@ -145,6 +145,20 @@ void ofxControlWidget::getParameters(vector<ofxControlParameterBase*> & paramete
     }
 }
 
+ofxControlParameterBase * ofxControlWidget::getParameter(string name)
+{
+    vector<ofxControlParameterBase*> parameters;
+    for (auto e : elementGroups) {
+        e->getParameters(parameters);
+    }
+    for (auto p : parameters) {
+        if (p->getName() == name) {
+            return p;
+        }
+    }
+    return NULL;
+}
+
 void ofxControlWidget::updateParameterOscAddress()
 {
     for (auto e : elementGroups) {

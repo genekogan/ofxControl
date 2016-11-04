@@ -6,6 +6,8 @@ ofxControlMultiElement::ofxControlMultiElement(string name) : ofxControlElement(
 {
     collapsed = false;
     hasParent = false;
+    rPrevActive = false;
+    rNextActive = false;
     parent = NULL;
 
     headerHeight = GUI_DEFAULT_HEADER_HEIGHT;
@@ -17,6 +19,9 @@ ofxControlMultiElement::ofxControlMultiElement(string name) : ofxControlElement(
     setHeader(getName());
     setCollapsible(false);
     setCollapsed(false);
+    
+    nView = 1e8;
+    setPage(0);
 }
 
 ofxControlMultiElement::~ofxControlMultiElement()
@@ -101,32 +106,44 @@ void ofxControlMultiElement::updateParameterOscAddress()
 
 void ofxControlMultiElement::setupGuiPositions()
 {
+    nPages = ceil((float) elements.size() / nView);
+    start = page * nView;
+    end = (page + 1) * nView;
+    
     ofPoint topLeft = ofPoint(rectangle.x, rectangle.y);
     if (collapsible && getActive())
     {
         headerRectangle.set(x, y, width, headerHeight);
         topLeft.y += headerHeight;
+        if (nPages > 1) {
+            rPrev.set(x+width-45, y, 15, headerHeight);
+            rNext.set(x+width-30, y, 15, headerHeight);
+        }
+        else {
+            rPrev.set(0, 0, 0, 0);
+            rNext.set(0, 0, 0, 0);
+        }
     }
     else {
         headerRectangle.set(0, 0, 0, 0);
+        rPrev.set(0, 0, 0, 0);
+        rNext.set(0, 0, 0, 0);
     }
 
     if (!getCollapsed() && getActive())
     {
         topLeft.y += controllerHeight;
         topLeft.y += collapsible ? marginY : 0;
-    
-        for (auto e : elements)
-        {
-            if (e->getActive())
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
             {
-                e->setPosition(topLeft.x + (collapsible ? marginX : 0), topLeft.y);
-                e->setWidth(getWidth() - (collapsible ? 2 * marginX : 0));
-                topLeft.y += e->getRectangle().height + marginY;
+                elements[e]->setPosition(topLeft.x + (collapsible ? marginX : 0), topLeft.y);
+                elements[e]->setWidth(getWidth() - (collapsible ? 2 * marginX : 0));
+                topLeft.y += elements[e]->getRectangle().height + marginY;
             }
             else
             {
-                e->setRectangle(0, 0, 0, 0);
+                elements[e]->setRectangle(0, 0, 0, 0);
             }
         }
     }
@@ -186,19 +203,19 @@ void ofxControlMultiElement::draw()
     
     ofSetColor(colorBackground, mouseOver ? 110 : 80);
     ofFill();
-    ofRect(rectangle);
+    ofDrawRectangle(rectangle);
     
     if (collapsible)
     {
         ofFill();
         ofSetColor(headerColor);
-        ofRect(headerRectangle);
+        ofDrawRectangle(headerRectangle);
         if (headerActive)
         {
             ofSetColor(colorActive);
             ofSetLineWidth(2);
             ofNoFill();
-            ofRect(headerRectangle);
+            ofDrawRectangle(headerRectangle);
         }
         ofSetColor(colorText);
         ofDrawBitmapString(name,
@@ -207,14 +224,19 @@ void ofxControlMultiElement::draw()
         ofDrawBitmapString(collapsed ? "+" : "-",
                            rectangle.x + rectangle.width - 16,
                            rectangle.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
+        ofSetColor(rPrevActive ? ofColor::red : ofColor::white);
+        ofDrawBitmapString("<", rPrev.x + 2, rPrev.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
+        ofSetColor(rNextActive ? ofColor::red : ofColor::white);
+        ofDrawBitmapString(">", rNext.x + 2, rNext.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
     }
     
     if (!getCollapsed())
     {
-        for (auto e : elements)
+        for (int e=0; e<elements.size(); e++)
         {
-            if (e->getActive()) {
-                e->draw();
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                elements[e]->draw();
             }
         }
     }
@@ -226,10 +248,15 @@ bool ofxControlMultiElement::mouseMoved(int mouseX, int mouseY)
 {
     ofxControlElement::mouseMoved(mouseX, mouseY);
     headerActive = headerRectangle.inside(mouseX, mouseY);
+    rPrevActive = rPrev.inside(mouseX, mouseY);
+    rNextActive = rNext.inside(mouseX, mouseY);
     if (!getCollapsed())
     {
-        for (auto e : elements) {
-            e->mouseMoved(mouseX, mouseY);
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                elements[e]->mouseMoved(mouseX, mouseY);
+            }
         }
     }
     return false;
@@ -240,8 +267,11 @@ bool ofxControlMultiElement::mousePressed(int mouseX, int mouseY)
     ofxControlElement::mousePressed(mouseX, mouseY);
     if (mouseOver && !getCollapsed())
     {
-        for (auto e : elements) {
-            if (e->mousePressed(mouseX, mouseY))  return true;
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                if (elements[e]->mousePressed(mouseX, mouseY))  return true;
+            }
         }
     }
     return false;
@@ -257,8 +287,11 @@ bool ofxControlMultiElement::mouseDragged(int mouseX, int mouseY)
     }
     else if (mouseOver && !getCollapsed())
     {
-        for (auto e : elements) {
-            if (e->mouseDragged(mouseX, mouseY))  return true;
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                if (elements[e]->mouseDragged(mouseX, mouseY))  return true;
+            }
         }
     }
     return false;
@@ -268,15 +301,26 @@ bool ofxControlMultiElement::mouseReleased(int mouseX, int mouseY)
 {
     if (headerActive && !draggingWidget)
     {
-        draggingWidget = false;
-        setCollapsed(!collapsed);
+        if (rPrev.inside(mouseX, mouseY)) {
+            prevPage();
+        }
+        else if (rNext.inside(mouseX, mouseY)) {
+            nextPage();
+        }
+        else {
+            draggingWidget = false;
+            setCollapsed(!collapsed);
+        }
         return true;
     }
     else if (mouseOver && !getCollapsed())
     {
         draggingWidget = false;
-        for (auto e : elements) {
-            if (e->mouseReleased(mouseX, mouseY))  return true;
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                if (elements[e]->mouseReleased(mouseX, mouseY))  return true;
+            }
         }
     }
     draggingWidget = false;
@@ -288,8 +332,11 @@ bool ofxControlMultiElement::keyPressed(int key)
     ofxControlElement::keyPressed(key);
     if (mouseOver)
     {
-        for (auto e : elements) {
-            if (e->keyPressed(key)) return true;
+        for (int e=0; e<elements.size(); e++) {
+            if (elements[e]->getActive() && e >= start && e < end)
+            {
+                if (elements[e]->keyPressed(key)) return true;
+            }
         }
         return true;
     }

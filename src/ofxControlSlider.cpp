@@ -23,7 +23,7 @@ void ofxControlSliderBase::setValue(float sliderValue)
     changed = true;
 }
 
-void ofxControlSliderBase::lerpTo(float nextValue, int numFrames)
+void ofxControlSliderBase::lerpTo(float nextValue, int numFrames, bool lerpReturn)
 {
     if (numFrames > 1)
     {
@@ -31,6 +31,7 @@ void ofxControlSliderBase::lerpTo(float nextValue, int numFrames)
         this->lerpPrevValue = sliderValue;
         this->lerpNumFrames = numFrames;
         this->lerpFrame = 0;
+        this->lerpReturn = lerpReturn;
     }
     else {
         setValue(nextValue);
@@ -65,7 +66,19 @@ void ofxControlSliderBase::update()
 {
     if (lerpFrame < lerpNumFrames)
     {
-        setValue(ofLerp(lerpPrevValue, lerpNextValue, (float) lerpFrame / (lerpNumFrames-1)));
+        float t;
+        if (lerpReturn) {
+            if (lerpFrame <= lerpNumFrames/2) {
+                t = ofMap(lerpFrame, 0, lerpNumFrames/2, 0, 1);
+            }
+            else {
+                t = ofMap(lerpFrame, lerpNumFrames/2, lerpNumFrames-1, 1, 0);
+            }
+        }
+        else {
+            t = (float) lerpFrame / (lerpNumFrames-1);
+        }
+        setValue(ofLerp(lerpPrevValue, lerpNextValue, sqrt(t)));
         lerpFrame++;
     }
 }

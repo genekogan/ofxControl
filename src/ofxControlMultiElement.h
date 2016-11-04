@@ -57,6 +57,15 @@ public:
     ofEvent<ofxControlElement*> newElementEvent;
     ofEvent<ofxControlElement*> removeElementEvent;
     
+    
+    
+    void setNumberVisibleElements(int nView){
+        this->nView = nView;
+        this->page = 0;
+        setupGuiPositions();
+    }
+    
+    
 protected:
     
     void setupGuiPositions();
@@ -80,4 +89,25 @@ protected:
     int controllerHeight;
     int marginX;
     int marginY;
+    
+    
+    
+
+    
+    
+    int nView, nPages, page, start, end;
+    ofRectangle rPrev, rNext;
+    bool rPrevActive, rNextActive;
+    
+    void setPage(int page) {
+        this->page = page;
+        setupGuiPositions();
+    }
+    
+    void nextPage() {
+        setPage((page + 1) % nPages);
+    }
+    void prevPage() {
+        setPage((page + nPages - 1) % nPages);
+    }
 };

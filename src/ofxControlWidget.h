@@ -127,6 +127,7 @@ public:
 
     vector<ofxControlElement*> & getElementGroups() {return elementGroups;}
     void getParameters(vector<ofxControlParameterBase*> & parameters);
+    ofxControlParameterBase * getParameter(string name);
     void setupGuiPositions();
     void addElementToTouchOscLayout(ofxControlElement *element, ofxControlTouchOscPage *page, float *y);
     

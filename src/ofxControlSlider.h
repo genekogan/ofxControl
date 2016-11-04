@@ -34,7 +34,8 @@ public:
     virtual void setValue(float sliderValue);
     float getValue() {return sliderValue;}
     
-    void lerpTo(float nextValue, int numFrames);
+    void lerpTo(float nextValue, int numFrames, bool lerpReturn=false);
+    void lerpToAndReturn(float nextValue, int numFrames) {lerpTo(nextValue, numFrames, true);}
     
     virtual void setMin(float min) { }
     virtual void setMax(float max) { }
@@ -78,7 +79,8 @@ protected:
     int numExpSteps;
     bool changed;
     string valueString, valueStringNext;
-    float lerpPrevValue, lerpNextValue;;
+    float lerpPrevValue, lerpNextValue;
+    bool lerpReturn;
     int lerpFrame, lerpNumFrames;
     bool editing;
     string editingString;

@@ -97,6 +97,25 @@ void ofxControlMultiElement::setHeader(string header)
     headerStringHeight = b.getBoundingBox(header, 0, 0).height;
 }
 
+void ofxControlMultiElement::setNumberVisibleElements(int nView){
+    this->nView = nView;
+    this->page = 0;
+    setupGuiPositions();
+}
+
+void ofxControlMultiElement::setPage(int page) {
+    this->page = page;
+    setupGuiPositions();
+}
+
+void ofxControlMultiElement::nextPage() {
+    setPage((page + 1) % nPages);
+}
+
+void ofxControlMultiElement::prevPage() {
+    setPage((page + nPages - 1) % nPages);
+}
+
 void ofxControlMultiElement::updateParameterOscAddress()
 {
     for (auto e : elements) {

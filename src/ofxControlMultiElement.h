@@ -25,7 +25,8 @@ public:
     
     void setHeader(string header);
     void setCollapsible(bool collapsible);
-    
+    void setNumberVisibleElements(int nView);
+
     bool getCollapsible() {return collapsible;}
     bool getCollapsed();
     void setCollapsed(bool collapsed);
@@ -57,23 +58,24 @@ public:
     ofEvent<ofxControlElement*> newElementEvent;
     ofEvent<ofxControlElement*> removeElementEvent;
     
-    
-    
-    void setNumberVisibleElements(int nView){
-        this->nView = nView;
-        this->page = 0;
-        setupGuiPositions();
-    }
-    
-    
 protected:
     
     void setupGuiPositions();
+    
+    void setPage(int page);
+    void nextPage();
+    void prevPage();
+    
     void addElementToTouchOscLayout(ofxControlTouchOscPage *page, float *y);
     void updateParameterOscAddress();
     virtual void initializeElement(ofxControlElement *element, bool sendNotification=true);
     
     vector<ofxControlElement*> elements;
+
+    // multiple pages
+    int nView, nPages, page, start, end;
+    ofRectangle rPrev, rNext;
+    bool rPrevActive, rNextActive;
 
     // header
     ofRectangle headerRectangle;
@@ -89,25 +91,4 @@ protected:
     int controllerHeight;
     int marginX;
     int marginY;
-    
-    
-    
-
-    
-    
-    int nView, nPages, page, start, end;
-    ofRectangle rPrev, rNext;
-    bool rPrevActive, rNextActive;
-    
-    void setPage(int page) {
-        this->page = page;
-        setupGuiPositions();
-    }
-    
-    void nextPage() {
-        setPage((page + 1) % nPages);
-    }
-    void prevPage() {
-        setPage((page + nPages - 1) % nPages);
-    }
 };

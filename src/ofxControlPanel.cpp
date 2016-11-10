@@ -241,7 +241,7 @@ void ofxControlPanel::update()
 }
 
 void ofxControlPanel::draw()
-{    
+{
     if (!active) {
         return;
     }
@@ -256,7 +256,7 @@ void ofxControlPanel::draw()
     {
         ofPushStyle();
         ofSetColor(255, 50);
-        ofRect(rectangle.x, rectangle.y + headerHeight, rectangle.width, controllerHeight);
+        ofDrawRectangle(rectangle.x, rectangle.y + headerHeight, rectangle.width, controllerHeight);
         ofPopStyle();
         
         if (controlRow)

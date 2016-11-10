@@ -223,7 +223,7 @@ void ofxControlMultiElement::draw()
     ofSetColor(colorBackground, mouseOver ? 110 : 80);
     ofFill();
     ofDrawRectangle(rectangle);
-    
+
     if (collapsible)
     {
         ofFill();
@@ -243,10 +243,12 @@ void ofxControlMultiElement::draw()
         ofDrawBitmapString(collapsed ? "+" : "-",
                            rectangle.x + rectangle.width - 16,
                            rectangle.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
-        ofSetColor(rPrevActive ? ofColor::red : ofColor::white);
-        ofDrawBitmapString("<", rPrev.x + 2, rPrev.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
-        ofSetColor(rNextActive ? ofColor::red : ofColor::white);
-        ofDrawBitmapString(">", rNext.x + 2, rNext.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
+        if (nPages > 1) {
+            ofSetColor(rPrevActive ? ofColor::red : ofColor::white);
+            ofDrawBitmapString("<", rPrev.x + 2, rPrev.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
+            ofSetColor(rNextActive ? ofColor::red : ofColor::white);
+            ofDrawBitmapString(">", rNext.x + 2, rNext.y + 1 + 0.5 * (headerHeight + 0.5 * headerStringHeight));
+        }
     }
     
     if (!getCollapsed())
